@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/cryptocat/cryptocat.png?branch=master)](http://travis-ci.org/cryptocat/cryptocat)
+
 #[Cryptocat](https://crypto.cat)
 #### Web Instant Messaging App With Accessible Encryption.
 #### Experimental software: Don't trust with your life! Peer review appreciated.
@@ -45,6 +47,9 @@ Also available from [Cryptocat](https://crypto.cat/get/cryptocat.safariextz).
 ## Discussion & Blog
 * [Issue tracker](https://github.com/cryptocat/cryptocat/issues)
 * [Development Blog](https://blog.crypto.cat)  
+
+## Tests
+* Run tests using `make tests`.
 
 ## Builds
 * Builds are available in `release/`.  
