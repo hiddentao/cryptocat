@@ -10,7 +10,10 @@
     "lodash": "~1.1.1",
     "mocha": "~1.8.2",
     "chai": "~1.5.0",
-    "sinon": "~1.6.0"
+    "sinon": "~1.6.0",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-mocha-test": "~0.2.2"
   },
   "scripts": {
     "test": "mocha"
