@@ -2,6 +2,12 @@
 
 module.exports = function (grunt) {
 
+	var chromeFolder = __dirname + '/src/chrome',
+		firefoxFolder = __dirname + '/src/firefox',
+		safariFolder = __dirname + '/src/cryptocat.safariextension',
+		releaseFolder = __dirname + '/release';
+
+
 	grunt.initConfig({
 		pkg:grunt.file.readJSON('package.json'),
 
@@ -12,6 +18,29 @@ module.exports = function (grunt) {
 			options:{
 				reporter:'spec',
 				ui:'exports'
+			}
+		},
+
+		copy: {
+			'chrome-to-firefox': {
+				files: [
+					{
+						expand: true,
+						src: [ 'css/**', 'img/**', 'js/**', 'locale/**', 'snd/**', 'locale/**', 'index.html' ],
+						dest: firefoxFolder + '/chrome/content/data',
+						cwd: chromeFolder
+					}
+				]
+			},
+			'chrome-to-safari': {
+				files: [
+					{
+						expand: true,
+						src: [ 'css/**', 'img/**', 'js/**', 'locale/**', 'snd/**', 'locale/**', 'index.html' ],
+						dest: safariFolder,
+						cwd: chromeFolder
+					}
+				]
 			}
 		},
 
@@ -56,21 +85,24 @@ module.exports = function (grunt) {
 	});
 
 
+	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-mocha-test');
 
-	grunt.registerTask('pre-build', 'Pre-build tasks', ['mochaTest', 'jshint']);
+	grunt.registerTask('copy-changes', 'Ensure all browser extensions have latest code', ['copy:chrome-to-firefox', 'copy:chrome-to-safari']);
 
-	grunt.registerTask('build-chrome', 'Build chrome browser extension', function() {
-		var done = this.async();
+	grunt.registerTask('tests', 'Run tests', ['mochaTest']);
 
-		var outputFile = __dirname + '/release/cryptocat-chrome.zip';
-		var inputFolder = __dirname + '/src/chrome';
+	grunt.registerTask('pre-build', 'Pre-build tasks', ['tests', 'jshint', 'copy-changes']);
 
-		grunt.file.delete(outputFile);
 
-		grunt.log.write('Compressing...');
-
+	/**
+	 * Create zip file.
+	 * @param inputFolder String folder containing input files.
+	 * @param outputFile String output file.
+	 * @param cb Function result callback with signature: (Boolean)
+	 */
+	var createZipFile = function(inputFolder, outputFile, cb) {
 		grunt.util.spawn({
 			cmd: 'zip',
 			opts: {
@@ -81,15 +113,37 @@ module.exports = function (grunt) {
 		}, function(error, result, code) {
 			if (-255 === code) {
 				grunt.log.errorlns(result.stderr);
-				done(false);
+				cb(false);
 			} else {
-				grunt.log.writeln('...done');
-				done();
+				grunt.log.writeln('...created ZIP [' + outputFile + ']');
+				cb(true);
 			}
 		});
+	};
+
+
+
+	grunt.registerTask('build-chrome', 'Build Chrome browser extension', function() {
+		var done = this.async();
+
+		grunt.log.write('Creating Chrome extension...');
+
+		var outputFile = releaseFolder + '/cryptocat-chrome.zip';
+
+		createZipFile(chromeFolder, outputFile, done);
 	});
 
-	grunt.registerTask('build', 'Build project', ['build-chrome']);
+	grunt.registerTask('build-firefox', 'Build Firefox browser extension', function() {
+		var done = this.async();
+
+		grunt.log.write('Creating Firefox add-on...');
+
+		var outputFile = releaseFolder + '/cryptocat-firefox.xpi';
+
+		createZipFile(firefoxFolder, outputFile, done);
+	});
+
+	grunt.registerTask('build', 'Build project', ['pre-build', 'build-chrome', 'build-firefox']);
 
 	grunt.registerTask('default', ['build']);
 };

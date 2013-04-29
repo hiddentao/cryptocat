@@ -8,7 +8,7 @@ before_script:
   - "npm install"
 
 script:
-  - "make tests"
+  - "grunt build"
 
 notifications:
   email:

@@ -7,12 +7,20 @@
 ## Description
 Cryptocat is a browser-based XMPP client that provides multi-user (and private) instant messaging inside chatrooms. It uses the [OTR](http://www.cypherpunks.ca/otr/) protocol for encrypted two-party chat and the (upcoming) mpOTR protocol for encrypted multi-party chat.  
 
+## Requirements
+
+We use [grunt](http://gruntjs.com/) to build the packages. To get it setup:
+
+1. Install [node.js](http://nodejs.org/)
+2. Run `npm install -g grunt-cli`
+3. Run `npm intall` in the project folder.
+
 ## Platforms
 ##### Google Chrome: `src/chrome/`
-Run `make chrome` to build a Google Chrome-loadable .zip extension (or just .zip the directory.)  
+Run `grunt chrome` to build a Google Chrome-loadable .zip extension (or just .zip the directory.)
 Also available from the [Chrome Web Store](https://chrome.google.com/webstore/detail/cryptocat/gonbigodpnfghidmnphnadhepmbabhij).  
 ##### Mozilla Firefox: `src/firefox/`
-Run `make firefox` to build a Mozilla Firefox-loadable .xpi extension (or just .zip the directory and change the extension to .xpi.)  
+Run `grunt firefox` to build a Mozilla Firefox-loadable .xpi extension (or just .zip the directory and change the extension to .xpi.)
 Also available from [Mozilla Firefox Addons](https://addons.mozilla.org/en-US/firefox/addon/cryptocat/).  
 ##### Apple Safari: `src/cryptocat.safariplugin/`
 Apple's model makes an automated build process difficult.  
@@ -49,7 +57,7 @@ Also available from [Cryptocat](https://crypto.cat/get/cryptocat.safariextz).
 * [Development Blog](https://blog.crypto.cat)  
 
 ## Tests
-* Run tests using `make tests`.
+* Run tests using `grunt tests`.
 
 ## Builds
 * Builds are available in `release/`.  
