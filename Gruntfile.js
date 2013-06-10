@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 	var srcFolder = __dirname + '/src/core',
 		firefoxFolder = __dirname + '/src/firefox',
 		safariFolder = __dirname + '/src/safari',
-    safariExtensionFolder = __dirname + '/src/cryptocat.safariextension',
+		safariExtensionFolder = __dirname + '/src/cryptocat.safariextension',
 		releaseFolder = __dirname + '/release';
 
 
@@ -22,32 +22,32 @@ module.exports = function (grunt) {
 			}
 		},
 
-		copy: {
-			'src-to-firefox': {
-				files: [
-          {
-						expand: true,
-						src: [ 'css/**', 'img/**', 'js/**', 'locale/**', 'snd/**', 'locale/**', 'index.html' ],
-						dest: firefoxFolder + '/chrome/content/data',
-						cwd: srcFolder
+		copy:{
+			'src-to-firefox':{
+				files:[
+					{
+						expand:true,
+						src:[ 'css/**', 'img/**', 'js/**', 'locale/**', 'snd/**', 'locale/**', 'index.html' ],
+						dest:firefoxFolder + '/chrome/content/data',
+						cwd:srcFolder
 					}
 				]
 			},
-			'src-to-safari': {
-				files: [
+			'src-to-safari':{
+				files:[
 					{
-						expand: true,
-						src: [ 'css/**', 'img/**', 'js/**', 'locale/**', 'snd/**', 'locale/**', 'index.html' ],
-						dest: safariExtensionFolder,
-						cwd: srcFolder
+						expand:true,
+						src:[ 'css/**', 'img/**', 'js/**', 'locale/**', 'snd/**', 'locale/**', 'index.html' ],
+						dest:safariExtensionFolder,
+						cwd:srcFolder
 					},
-          {
-            expand: true,
-            src: [ '*' ],
-            dest: safariExtensionFolder,
-            cwd: safariFolder
-          }
-        ]
+					{
+						expand:true,
+						src:[ '*' ],
+						dest:safariExtensionFolder,
+						cwd:safariFolder
+					}
+				]
 			}
 		},
 
@@ -107,15 +107,15 @@ module.exports = function (grunt) {
 	 * @param outputFile String output file.
 	 * @param cb Function result callback with signature: (Boolean)
 	 */
-	var createZipFile = function(inputFolder, outputFile, cb) {
+	var createZipFile = function (inputFolder, outputFile, cb) {
 		grunt.util.spawn({
-			cmd: 'zip',
-			opts: {
-				cwd: inputFolder
+			cmd:'zip',
+			opts:{
+				cwd:inputFolder
 			},
-			args: ['-q', '-r9', outputFile, '.', '-x', '*/\\.*', '-x', '\\.*'],
-			fallback: -255
-		}, function(error, result, code) {
+			args:['-q', '-r9', outputFile, '.', '-x', '*/\\.*', '-x', '\\.*'],
+			fallback:-255
+		}, function (error, result, code) {
 			if (-255 === code) {
 				grunt.log.errorlns(result.stderr);
 				cb(false);
@@ -127,8 +127,7 @@ module.exports = function (grunt) {
 	};
 
 
-
-	grunt.registerTask('build-chrome', 'Build Chrome browser extension', function() {
+	grunt.registerTask('build-chrome', 'Build Chrome browser extension', function () {
 		var done = this.async();
 
 		grunt.log.write('Creating Chrome extension...');
@@ -138,27 +137,26 @@ module.exports = function (grunt) {
 		createZipFile(srcFolder, outputFile, done);
 	});
 
-	grunt.registerTask('build-firefox', 'Build Firefox browser extension', function() {
+	grunt.registerTask('build-firefox', 'Build Firefox browser extension', function () {
 		var done = this.async();
 
 		grunt.log.write('Creating Firefox add-on...');
 
-    grunt.task.run([ 'copy:src-to-firefox' ]);
+		grunt.task.run([ 'copy:src-to-firefox' ]);
 
 		var outputFile = releaseFolder + '/cryptocat-firefox.xpi';
 
 		createZipFile(firefoxFolder, outputFile, done);
 	});
 
-  grunt.registerTask('build-safari', 'Build Safari browser extension', function() {
-    grunt.log.write('Creating Safari extension...');
+	grunt.registerTask('build-safari', 'Build Safari browser extension', function () {
+		grunt.log.write('Creating Safari extension...');
 
-    grunt.task.run([ 'copy:src-to-safari' ]);
-  });
+		grunt.task.run([ 'copy:src-to-safari' ]);
+	});
 
 
-
-  grunt.registerTask('build', 'Build project', ['pre-build', 'build-chrome', 'build-firefox', 'build-safari']);
+	grunt.registerTask('build', 'Build project', ['pre-build', 'build-chrome', 'build-firefox', 'build-safari']);
 
 	grunt.registerTask('default', ['build']);
 };
