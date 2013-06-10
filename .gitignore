@@ -1,6 +1,7 @@
 .DS_Store
-
 stz/*
+src/firefox/chrome/content/data/*
+src/cryptocat.safariextension/*
 
 # npm
 node_modules/
